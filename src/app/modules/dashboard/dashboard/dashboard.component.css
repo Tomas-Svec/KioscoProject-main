@@ -1,0 +1,21 @@
+/* Estilos personalizados para el contenedor del diálogo */
+.custom-dialog-container .mat-dialog-container {
+  background-color: #f9f9f9; /* Cambia el fondo */
+  border-radius: 12px; /* Agrega bordes redondeados */
+  padding: 20px; /* Espaciado interno */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+/* Ajusta el contenido del diálogo */
+.custom-dialog-container .content {
+  max-height: 70vh; /* Altura máxima del contenido */
+  overflow-y: auto; /* Barra de desplazamiento vertical si es necesario */
+}
+
+/* Estilos específicos para móviles */
+@media (max-width: 768px) {
+  .custom-dialog-container .mat-dialog-container {
+    border-radius: 0; /* Quita bordes redondeados en móviles */
+    padding: 10px; /* Reduce el espaciado interno */
+  }
+}

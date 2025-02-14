@@ -1,0 +1,118 @@
+<div class="flex flex-col h-screen">
+  <!-- Body -->
+  <main class="flex-1 flex">
+    <!-- Sección Izquierda: Historial de Ventas -->
+    <section class="w-2/3 p-4 space-y-4 bg-white rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold text-gray-800">Historial de Ventas</h2>
+      <table class="w-full border-collapse">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 text-left text-gray-800">ID</th>
+            <th class="p-2 text-left text-gray-800">Producto</th>
+            <th class="p-2 text-left text-gray-800">Cantidad</th>
+            <th class="p-2 text-left text-gray-800">Total</th>
+            <th class="p-2 text-left text-gray-800">Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventas" class="border-b hover:bg-gray-50 text-gray-800">
+            <td class="p-2 text-gray-800">{{ venta.id }}</td>
+            <td class="p-2 text-gray-800">{{ venta.producto }}</td>
+            <td class="p-2 text-gray-800">{{ venta.cantidad }}</td>
+            <td class="p-2 text-gray-800">${{ venta.total }}</td>
+            <td class="p-2 text-gray-800">{{ venta.fecha }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Sección Derecha: Carrito de Ventas -->
+    <aside class="w-1/3 p-4 space-y-4 bg-white rounded-lg shadow-md">
+      <div class="flex justify-between mb-4">
+        <!-- Botón Administrar Stock -->
+        <button 
+          class="btn w-full md:w-auto bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 "
+          (click)="openManageStockModal()"
+        >
+          Administrar Stock
+        </button>
+
+        <!-- Botón Nueva Venta -->
+        <button 
+          class="btn w-full md:w-auto bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+          (click)="openNewSaleModal()"
+        >
+          Nueva Venta
+        </button>
+
+        <!-- Modal de Nueva Venta -->
+<ng-template #addSaleModal let-data>
+  <app-add-sale-modal 
+    (productAdded)="onProductAdded($event)"
+  ></app-add-sale-modal>
+</ng-template>
+      </div>
+
+      <!-- Lista de Productos en el Carrito -->
+<h3 class="text-lg font-semibold text-gray-800">Carrito de Ventas</h3>
+<ul class="space-y-2">
+  <li *ngFor="let item of cartItems" class="flex items-center bg-gray-100 p-2 rounded-md text-gray-800">
+    <!-- Nombre del Producto con Botones + y - -->
+    <div class="flex items-center space-x-2 grow">
+      <span class="font-medium">{{ item.nombre }}</span>
+      <div class="flex items-center space-x-1">
+        <!-- Botón para decrementar -->
+        <button 
+          class="w-6 h-6 flex items-center justify-center text-red-500 hover:text-red-700 border border-red-500 hover:border-red-700 rounded-md"
+          (click)="decrementQuantity(item)"
+          [disabled]="item.cantidad <= 1"
+        >
+          -
+        </button>
+        <!-- Mostrar Cantidad -->
+        <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded-md">{{ item.cantidad }}</span>
+        <!-- Botón para incrementar -->
+        <button 
+          class="w-6 h-6 flex items-center justify-center text-green-500 hover:text-green-700 border border-green-500 hover:border-green-700 rounded-md"
+          (click)="incrementQuantity(item)"
+        >
+          +
+        </button>
+      </div>
+    </div>
+
+    <!-- Acciones (Eliminar y Descuento) -->
+    <div class="flex space-x-2">
+      <!-- Botón Eliminar -->
+      <button 
+        class="text-red-500 hover:text-red-700"
+        (click)="removeFromCart(item)"
+      >
+        Eliminar
+      </button>
+      <!-- Botón Descuento -->
+      <button 
+        class="text-yellow-500 hover:text-yellow-700"
+        (click)="applyDiscount(item)"
+      >
+        Descuento
+      </button>
+    </div>
+  </li>
+</ul>
+      
+      <!-- Total de la Venta -->
+      <div class="mt-4 p-4 bg-gray-100 rounded-md text-gray-800">
+        <strong>Total: ${{ total.toFixed(2) }}</strong>
+      </div>
+
+      <!-- Botón Finalizar Venta -->
+      <button 
+        class="btn w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600"
+        (click)="openConfirmSaleModal()"
+      >
+        Finalizar Venta
+      </button>
+    </aside>
+  </main>
+</div>

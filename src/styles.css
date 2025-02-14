@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ajustes generales */
+body {
+  @apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
+  margin: 0; /* Aseguramos que no haya márgenes */
+  padding: 0; /* Elimina cualquier padding por defecto */
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  min-height: 100vh; /* Esto permite que el body ocupe al menos toda la altura de la pantalla */
+  overflow-x: hidden; /* Evita que haya desplazamiento horizontal */
+  display: flex; /* Para manejar el contenido de manera más flexible */
+  flex-direction: column; /* Asegura que los elementos hijos se alineen en columna */
+}
+
+html {
+  scroll-behavior: smooth; /* Facilita el desplazamiento suave */
+}
+

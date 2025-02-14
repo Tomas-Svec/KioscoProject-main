@@ -1,0 +1,292 @@
+<div class="bg-gray-100 manage-stock-container w-full md:max-w-5xl mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4 text-gray-800">Gestión de Stock</h1>
+
+  <!-- Contenedor principal scrollable -->
+  <div class="flex-1 overflow-y-auto space-y-6 w-full h-full">
+
+    <!-- Formulario para agregar/editar productos -->
+    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+      <form #form="ngForm" (ngSubmit)="onSubmit()" class="space-y-4 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <!-- Campos del formulario (mantener igual) -->
+          <!-- Nombre -->
+      <div>
+          <label for="nombre" class="block text-sm font-semibold  dark:text-gray-200 mb-2">Nombre:</label>
+          <input [(ngModel)]="selectedProduct.nombre" name="nombre" required
+                 class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                 bg-white dark:bg-gray-600 font-medium">
+          <div *ngIf="form.controls['nombre']?.invalid && form.submitted" class="text-red-500 text-sm">
+            El nombre es obligatorio.
+          </div>
+        </div>
+
+           <!-- Descripción -->
+      <div>
+          <label for="descripcion" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Descripción:</label>
+          <input [(ngModel)]="selectedProduct.descripcion" name="descripcion"
+                 class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                 bg-white dark:bg-gray-600 font-medium">
+        </div>
+
+
+          <!-- Precio -->
+      <div>
+          <label for="precio" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Precio:</label>
+          <input type="number" [(ngModel)]="selectedProduct.precio" name="precio" required
+                 class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                 bg-white dark:bg-gray-600 font-medium">
+          <div *ngIf="form.controls['precio']?.invalid && form.submitted" class="text-red-500 text-sm">
+            El precio debe ser mayor que 0.
+          </div>
+        </div>
+
+          <div>
+            <label for="stock" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Stock:</label>
+            <input type="number" [(ngModel)]="selectedProduct.stock" name="stock" required
+                   class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                   focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                   text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                   bg-white dark:bg-gray-600 font-medium">
+          </div>
+
+          
+          <div>
+              <label for="categoria" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Categoría:</label>
+              <select [(ngModel)]="selectedProduct.categoriaId" name="categoria" required
+                      class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                      focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                      text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                      bg-white dark:bg-gray-600 font-medium">
+                <option value="">Selecciona una categoría</option>
+                <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.nombre }}</option>
+              </select>
+              <div *ngIf="form.controls['categoria']?.invalid && form.submitted" class="text-red-500 text-sm">
+                Debes seleccionar una categoría.
+              </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between space-x-4">
+          <!-- Botones del formulario (mantener igual) -->
+
+          <button type="button" (click)="openCategoryModal()"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Gestionar Categorías
+          </button>
+          <button type="submit" [disabled]="!form.form.valid"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+
+
+
+
+    <!-- Tabla de productos con scroll interno -->
+  
+    <div class="filters flex flex-col md:flex-row items-center justify-between mb-4 bg-white dark:bg-gray-700 px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg ">
+
+          <!-- Filtro por Categoría -->
+          <div class="category-filter mb-2 md:mb-0 mr-2 px-4 py-2  border-gray-300 dark:border-gray-600 rounded-lg ">
+            <label for="categoryFilter" class="font-medium mr-2 text-gray-800 dark:text-gray-200">Filtrar por categoría:</label>
+            <select 
+              id="categoryFilter" 
+              [(ngModel)]="selectedCategory" 
+              (change)="onCategoryChange()" 
+              name="categoryFilter" 
+              class="block w-full md:w-auto px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200 font-bold mb-4 mr-2 text-gray-800"
+            >
+              <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                {{ categoria.nombre }}
+              </option>
+            </select>
+            <button 
+            (click)="clearFilters()" 
+            class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            Limpiar Filtros
+          </button>
+          </div>
+        
+          <!-- Búsqueda por Nombre -->
+          <div class="search-filter flex-1 md:flex-initial text-gray-800 dark:text-gray-200 mr-4">
+            <label for="searchInput" class="font-medium">Buscar por nombre:</label>
+            <input 
+              type="text" 
+              id="searchInput" 
+              [(ngModel)]="searchTerm" 
+              placeholder="Escribe el nombre del producto..." 
+              class="w-full md:w-auto focus:outline-none focus:ring focus:ring-blue-200 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800"
+            />
+          </div>
+    
+        </div>
+    
+      <!-- Lista de Productos -->
+      <table class="min-w-full divide-y hidden md:table divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Precio</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Stock</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Categoría</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let producto of paginatedProducts">
+            <td class="px-6 py-4 whitespace-nowrap text-gray-800">{{ producto.nombre }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-800">${{ producto.precio }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-800">{{ producto.stock }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-800">{{ getCategoriaNombre(producto.categoriaId) }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-800">
+              <button 
+                (click)="editProduct(producto)" 
+                class="text-indigo-600 hover:text-indigo-900 mr-2"
+              >
+                Editar
+              </button>
+              <button 
+                (click)="deleteProduct(producto.id)" 
+                class="text-red-600 hover:text-red-900"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+
+          
+        </tbody>
+        
+      </table>
+
+      <div class="pagination flex items-center space-x-4 mt-4">
+  <!-- Botón "Primera" -->
+  <button 
+    [disabled]="currentPage === 1" 
+    (click)="goToFirstPage()" 
+    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    [class.opacity-50]="currentPage === 1"
+    [attr.disabled]="currentPage === 1 ? true : null"
+  >
+    Primera
+  </button>
+
+  <!-- Botón "Anterior" -->
+  <button 
+    [disabled]="currentPage === 1" 
+    (click)="goToPreviousPage()" 
+    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    [class.opacity-50]="currentPage === 1"
+    [attr.disabled]="currentPage === 1 ? true : null"
+  >
+    Anterior
+  </button>
+
+  <!-- Indicador de página -->
+  <span class="text-gray-600 font-medium">Página {{ currentPage }} de {{ totalPages }}</span>
+
+  <!-- Botón "Siguiente" -->
+  <button 
+    [disabled]="currentPage === totalPages" 
+    (click)="goToNextPage()" 
+    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    [class.opacity-50]="currentPage === totalPages"
+    [attr.disabled]="currentPage === totalPages ? true : null"
+  >
+    Siguiente
+  </button>
+
+  <!-- Botón "Última" -->
+  <button 
+    [disabled]="currentPage === totalPages" 
+    (click)="goToLastPage()" 
+    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    [class.opacity-50]="currentPage === totalPages"
+    [attr.disabled]="currentPage === totalPages ? true : null"
+  >
+    Última
+  </button>
+</div>
+      
+    </div>
+    
+  </div>
+
+
+
+  <!-- Modal para gestionar categorías -->
+  <div *ngIf="showCategoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg w-full max-w-screen-lg max-h-[80vh] overflow-y-auto">
+
+
+     
+      <h3 class="text-lg font-bold mb-4">Gestionar Categorías</h3>
+      <form (ngSubmit)="saveCategory()" class="space-y-4">
+        <div>
+          <label for="nombreCategoria" class="block text-sm font-medium bg-white dark:bg-gray-700">Nombre de la categoría:</label>
+          <input [(ngModel)]="currentCategory.nombre" name="nombreCategoria" required
+                 class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                 bg-white dark:bg-gray-600 font-medium">
+        </div>
+        <div class="flex justify-end space-x-4">
+          <button type="button" (click)="closeCategoryModal()"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Cancelar
+          </button>
+          <button type="submit"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Guardar
+          </button>
+        </div>
+      </form>
+
+      <ul class="mt-6 space-y-2">
+        <li *ngFor="let categoria of categorias" class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+          <span class="text-sm text-gray-700">{{ categoria.nombre }}</span>
+          <div>
+            <button (click)="editCategory(categoria)"
+                    class="text-indigo-600 hover:text-indigo-900 mr-2">Editar</button>
+            <button (click)="deleteCategory(categoria.id)"
+                    class="text-red-600 hover:text-red-900">Eliminar</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+
+ <!-- Versión para Móviles -->
+ <div class="mobile-table md:hidden ">
+  <div *ngFor="let producto of filteredProducts" class="px-4 py-2 border-2 text-gray-800  dark:border-gray-600 rounded-lg">
+    <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
+    <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+    <p><strong>Stock:</strong> {{ producto.stock }}</p>
+    <p><strong>Categoría:</strong> {{ getCategoriaNombre(producto.categoriaId) }}</p>
+    <div class="flex justify-between mt-2">
+      <button (click)="editProduct(producto)" class="text-indigo-600 hover:text-indigo-900">Editar</button>
+      <button (click)="deleteProduct(producto.id)" class="text-red-600 hover:text-red-900">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+   
+
+      
+          

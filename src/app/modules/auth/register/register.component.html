@@ -1,0 +1,108 @@
+<!-- Contenedor principal del registro -->
+<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+  <div class="register-container bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+      Registro
+    </h2>
+    <!-- Formulario de registro -->
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Campo de Nombre -->
+      <div class="form-group">
+        <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Nombre
+        </label>
+        <input
+          type="text"
+          id="nombre"
+          [(ngModel)]="nombre"
+          name="nombre"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Tu nombre"
+          required
+        />
+      </div>
+      <!-- Campo de Apellido -->
+      <div class="form-group">
+        <label for="apellido" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Apellido
+        </label>
+        <input
+          type="text"
+          id="apellido"
+          [(ngModel)]="apellido"
+          name="apellido"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Tu apellido"
+          required
+        />
+      </div>
+      <!-- Campo de Email -->
+      <div class="form-group">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="ejemplo@correo.com"
+          required
+        />
+      </div>
+      <!-- Campo de Contraseña -->
+      <div class="form-group">
+        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Contraseña
+        </label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Contraseña"
+          required
+        />
+      </div>
+      <!-- Campo de Rol -->
+      <div class="form-group">
+        <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Rol
+        </label>
+        <select
+          id="role"
+          [(ngModel)]="rol"
+          name="role"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          required
+        >
+          <option value="Empleado">Empleado</option>
+          <option value="Jefe">Jefe</option>
+        </select>
+      </div>
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="error text-red-500 text-sm text-center">
+        {{ errorMessage }}
+      </div>
+      <!-- Botón de registro -->
+      <button
+        type="submit"
+        class="w-full py-2 px-4 bg-green-800 hover:bg-green-700 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+      >
+        Registrar
+      </button>
+    </form>
+    <!-- Enlace para volver al login -->
+    <div class="mt-4 text-center">
+      <span class="text-gray-600 dark:text-gray-400">¿Ya tienes una cuenta?</span>
+      <a
+        (click)="goToLogin()"
+        class="link text-indigo-600 hover:underline cursor-pointer ml-2"
+      >
+        Inicia sesión aquí
+      </a>
+    </div>
+  </div>
+</div>

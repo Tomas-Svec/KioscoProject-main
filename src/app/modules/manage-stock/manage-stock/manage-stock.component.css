@@ -1,0 +1,24 @@
+/* Reducir el tamaño de fuente en móviles */
+@media (max-width: 768px) {
+  .dialog-content h2 {
+    font-size: 18px;
+  }
+
+  .dialog-content table {
+    font-size: 14px;
+  }
+
+  .dialog-content th,
+  .dialog-content td {
+    padding: 8px;
+  }
+}
+  /* Si necesitas que el fondo del modal sea más oscuro o con otro efecto visual */
+  .manage-stock-modal .modal-content {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  .ng-invalid.ng-touched {
+    border-color: red;
+  }

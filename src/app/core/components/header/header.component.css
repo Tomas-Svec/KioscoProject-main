@@ -1,0 +1,18 @@
+/* src/app/core/components/header/header.component.css */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+}
+
+/* Estilo para el botón de retroceso */
+button {
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el mouse */
+}

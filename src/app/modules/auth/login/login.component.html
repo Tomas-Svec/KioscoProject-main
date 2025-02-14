@@ -1,0 +1,68 @@
+
+<!-- Contenedor principal del login -->
+<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+  <div class="login-container bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+      Iniciar Sesión
+    </h2>
+
+    <!-- Formulario de login -->
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Campo de Email -->
+      <div class="form-group">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="ejemplo@correo.com"
+          required
+        />
+      </div>
+
+      <!-- Campo de Contraseña -->
+      <div class="form-group">
+        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Contraseña
+        </label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Contraseña"
+          required
+        />
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="error text-red-500 text-sm text-center">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Botón de inicio de sesión -->
+      <button
+        type="submit"
+        class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+      >
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <!-- Enlace para registrarse -->
+    <div class="register-link mt-4 text-center">
+      <span class="text-gray-600 dark:text-gray-400">¿No tienes una cuenta?</span>
+      <a
+        (click)="goToRegister()"
+        class="link text-indigo-600 hover:underline cursor-pointer ml-2"
+      >
+        Regístrate aquí
+      </a>
+    </div>
+  </div>
+</div>

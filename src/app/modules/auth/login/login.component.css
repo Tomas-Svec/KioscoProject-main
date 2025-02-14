@@ -1,0 +1,49 @@
+/* Estilos por defecto */
+.login-container {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* Opcional: Ajustar algunos estilos solo para el modo oscuro */
+body.dark-mode .login-container {
+  border: 1px solid #ffffff50;
+}
+
+
+
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* Estilo para el ícono de mostrar/ocultar contraseña */
+.form-group span {
+  font-size: 18px;
+  color: #007bff;
+}
+
+/* Cambiar el color del ícono al pasar el mouse */
+.form-group span:hover {
+  color: #0056b3;
+}
+
+/* Estilos para el enlace de registro */
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.register-link .link {
+  color: #007bff; /* Color azul similar a los botones */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link .link:hover {
+  text-decoration: underline;
+}

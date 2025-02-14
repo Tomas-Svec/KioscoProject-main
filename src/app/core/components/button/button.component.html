@@ -1,0 +1,6 @@
+<button
+  [class]="type === 'primary' ? 'btn-primary' : 'btn-secondary'"
+  [disabled]="disabled"
+  [style.width]="fullWidth ? '100%' : 'auto'">
+  <ng-content></ng-content> <!-- Contenido interno del botón -->
+</button>

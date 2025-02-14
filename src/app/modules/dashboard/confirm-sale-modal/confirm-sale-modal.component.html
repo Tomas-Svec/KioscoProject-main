@@ -1,0 +1,18 @@
+<div *ngIf="saleData && saleData.items">
+  <h2>Confirmar Venta</h2>
+  <p>Usuario: {{ saleData?.user?.nombre }} {{ saleData?.user?.apellido }}</p>
+  <p>Fecha: {{ saleData?.date?.toLocaleDateString('es-ES') }}</p>
+  <p>Total: ${{ saleData?.total }}</p>
+
+  <ul>
+    <li *ngFor="let item of saleData.items">
+      {{ item.nombre }} - Cantidad: {{ item.cantidad }} - Precio: ${{ item.precio }}
+    </li>
+  </ul>
+
+  <button mat-button (click)="confirmSale.emit()">Confirmar</button>
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+</div>
+<div *ngIf="!saleData || !saleData.items">
+  <p>No hay datos disponibles para confirmar la venta.</p>
+</div>

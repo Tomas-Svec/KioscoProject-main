@@ -4,26 +4,37 @@
     <!-- Sección Izquierda: Historial de Ventas -->
     <section class="w-2/3 p-4 space-y-4 bg-white rounded-lg shadow-md">
       <h2 class="text-xl font-semibold text-gray-800">Historial de Ventas</h2>
+    
       <table class="w-full border-collapse">
         <thead class="bg-gray-100">
           <tr>
-            <th class="p-2 text-left text-gray-800">ID</th>
-            <th class="p-2 text-left text-gray-800">Producto</th>
-            <th class="p-2 text-left text-gray-800">Cantidad</th>
-            <th class="p-2 text-left text-gray-800">Total</th>
+            <th class="p-2 text-left text-gray-800">Empleado</th>
             <th class="p-2 text-left text-gray-800">Fecha</th>
+            <th class="p-2 text-left text-gray-800">Total</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let venta of ventas" class="border-b hover:bg-gray-50 text-gray-800">
             <td class="p-2 text-gray-800">{{ venta.id }}</td>
-            <td class="p-2 text-gray-800">{{ venta.producto }}</td>
-            <td class="p-2 text-gray-800">{{ venta.cantidad }}</td>
+            <td class="p-2 text-gray-800">{{ venta.user?.nombre }} {{ venta.user?.apellido }}</td>
+            <td class="p-2 text-gray-800">{{ venta.fechaVenta | date: 'short' }}</td>
             <td class="p-2 text-gray-800">${{ venta.total }}</td>
-            <td class="p-2 text-gray-800">{{ venta.fecha }}</td>
+            <td class="p-2">
+              <button class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                      (click)="openSaleDetails(venta)">
+                Detalles
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
+    
+      <!-- Botones de paginación -->
+      <div class="flex justify-between mt-4">
+        <button (click)="prevPage()" [disabled]="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded-md">Anterior</button>
+        <span class="text-gray-700">Página {{ currentPage }}</span>
+        <button (click)="nextPage()" class="px-4 py-2 bg-gray-300 rounded-md">Siguiente</button>
+      </div>
     </section>
 
     <!-- Sección Derecha: Carrito de Ventas -->

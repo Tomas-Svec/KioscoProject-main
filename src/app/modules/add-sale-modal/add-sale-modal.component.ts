@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Output, Inject } from '@angular/core';
+import { Component, EventEmitter, Output, Inject, OnInit } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 
 
 @Component({
@@ -14,10 +14,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './add-sale-modal.component.html',
   styleUrl: './add-sale-modal.component.css',
 })
-export class AddSaleModalComponent {
+export class AddSaleModalComponent implements OnInit {
+  
   @Output() productAdded = new EventEmitter<any>(); // Emitir eventos cuando se agrega un producto
 
-  products: any[] = [];
+  saleForm!: FormGroup;
+  paymentMethods = ['Efectivo', 'Transferencia', 'Tarjeta']; // Métodos de pago disponibles
+  productos: any[] = [];
   filteredProducts: any[] = [];
   searchTerm: string = '';
   pageSize = 10; // Número de productos por página
@@ -25,39 +28,64 @@ export class AddSaleModalComponent {
 
 
   constructor(
+    private fb: FormBuilder,
     private apiService: ApiService,
     public dialogRef: MatDialogRef<AddSaleModalComponent>
   ) {}
 
 
   ngOnInit(): void {
-    this.loadProducts(); // Cargar productos al inicializar
+    this.saleForm = this.fb.group({
+      totalAmount: ['', Validators.required],
+      paymentMethod: ['', Validators.required],  // Campo para seleccionar el método de pago
+      // Otros campos de la venta
+    });
+
+    this.loadProducts(); // Cargar productos
   }
-
-
-  // Cargar productos desde el backend
+// Cargar productos desde el backend
   loadProducts(): void {
     this.apiService.getProducts().subscribe(
       (data: any[]) => {
-        this.products = data;
-        this.filteredProducts = this.products; // Inicializar productos filtrados
+        this.productos = data;  // Almacena los productos en el array
+        console.log('Productos cargados:', this.productos);  // Verifica que los datos estén llegando
+        this.filterProducts();  // Filtra los productos después de cargarlos
       },
       (error) => {
-        console.error('Error al cargar productos:', error);
+        console.error('Error al cargar productos:', error);  // Manejo de errores
       }
     );
   }
+
+  submitSale(): void {
+    if (this.saleForm.valid) {
+      const saleData = this.saleForm.value;
+
+      // Asignar el medio de pago al objeto saleData
+      saleData.MedioPago = saleData.paymentMethod;  // Asegurarse que 'paymentMethod' se mapee a 'MedioPago'
+
+      this.apiService.submitSale(saleData).subscribe(response => {
+        console.log('Venta registrada', response);
+        // Aquí podrías agregar lógica para mostrar un mensaje de éxito o redirigir
+      });
+    }
+  }
+
+  
+  
+  
 
 
   // Filtrar productos por término de búsqueda
   filterProducts(): void {
     if (this.searchTerm.trim() !== '') {
-      this.filteredProducts = this.products.filter((producto) =>
+      this.filteredProducts = this.productos.filter((producto) =>
         producto.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
-      this.filteredProducts = this.products; // Mostrar todos si no hay búsqueda
+      this.filteredProducts = this.productos;  // Mostrar todos si no hay búsqueda
     }
+    console.log('Productos filtrados:', this.filteredProducts);  // Verifica el filtrado
   }
 
   //Obtener productos paginados

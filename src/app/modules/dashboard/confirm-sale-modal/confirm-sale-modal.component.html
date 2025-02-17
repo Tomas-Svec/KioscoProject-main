@@ -10,7 +10,7 @@
     </li>
   </ul>
 
-  <button mat-button (click)="confirmSale.emit()">Confirmar</button>
+  <button mat-button (click)="confirmarVenta()">Confirmar</button>
   <button mat-button (click)="dialogRef.close()">Cancelar</button>
 </div>
 <div *ngIf="!saleData || !saleData.items">

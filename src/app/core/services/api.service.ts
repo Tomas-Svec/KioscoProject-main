@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { CompleteSaleDto } from './CompleteSaleDto';
 import { AuthService } from './auth.service';
 
@@ -58,7 +58,48 @@ export class ApiService {
 
 
   completeSale(saleDto: CompleteSaleDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/sales/complete-sale`, saleDto);
+    return this.http.post(`${this.apiUrl}/api/Sales/Completesale`, saleDto);
+  }
+  
+  // Obtener todas las ventas
+  getSales(
+    pageNumber: number = 1,
+    pageSize: number = 5,
+    minTotal?: number,
+    maxTotal?: number,
+    orderBy: string = "FechaVenta"
+  ): Observable<any[]> {
+    let params = new HttpParams()
+      .set("pageNumber", pageNumber.toString())
+      .set("pageSize", pageSize.toString())
+      .set("orderBy", orderBy);
+  
+    if (minTotal !== undefined) {
+      params = params.set("minTotal", minTotal.toString());
+    }
+  
+    if (maxTotal !== undefined) {
+      params = params.set("maxTotal", maxTotal.toString());
+    }
+  
+    return this.http.get<any[]>(`${this.apiUrl}/api/sales`, { params }).pipe(
+      tap(response => {
+        console.log("Ventas con detalles recibidas:", response); // 🔍 Verificar si llegan los detalles
+        if (response?.length > 0) {
+          response.forEach(sale => {
+            console.log("Detalles de la venta:", sale.Detalles);
+          });
+        }
+      }),
+      catchError(error => {
+        console.error("Error al obtener ventas:", error);
+        return of([]); // Retornar un array vacío en caso de error
+      })
+    );
+  }
+  
+  submitSale(saleData: any): Observable<any> {
+    return this.http.post(`/api/sales`, saleData);
   }
 
 

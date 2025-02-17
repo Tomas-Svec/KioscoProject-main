@@ -106,7 +106,7 @@ isAuthenticated(): boolean {
       })
     };
   
-    return this.http.get<any>(`${this.apiUrl}/auth/profile`, httpOptions).pipe(
+    return this.http.get<any>(`${this.apiUrl}/User/profile`, httpOptions).pipe(
       catchError(this.handleError)
     );
   }

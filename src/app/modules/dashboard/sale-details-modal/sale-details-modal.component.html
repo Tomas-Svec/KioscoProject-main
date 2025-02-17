@@ -1,0 +1,30 @@
+<div class="p-6">
+    <h2 class="text-lg font-semibold text-gray-900">Detalles de la Venta</h2>
+    <p><strong>Fecha:</strong> {{ sale.fechaVenta | date: 'short' }}</p>
+    <p><strong>Empleado:</strong> {{ sale.user?.nombre }} {{ sale.user?.apellido }}</p>
+  
+    <h3 class="mt-4 text-md font-semibold text-gray-900">Productos Vendidos:</h3>
+    <ul *ngIf="sale.detalles?.length > 0; else noData">
+      <li *ngFor="let detalle of sale.detalles" class="p-2 border rounded-md">
+        <p><strong>Producto:</strong> {{ detalle.producto }}</p>
+        <p><strong>Descripcion:</strong> {{ detalle.descripcion }}</p>
+        <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+        <p><strong>Precio Unitario:</strong> ${{ detalle.precioUnitario }}</p>
+      </li>
+    </ul>
+  
+    <h3 class="mt-4 text-md font-semibold text-gray-900">Stock Disponible:</h3>
+    <ul *ngIf="sale.detalles?.length > 0; else noData">
+      <li *ngFor="let detalle of sale.detalles" class="p-2 border rounded-md">
+        <p><strong>Producto:</strong> {{ detalle.producto }}</p>
+        <p><strong>Stock Restante:</strong> {{ detalle.stockDisponible }}</p>
+      </li>
+    </ul>
+  
+    <ng-template #noData>
+      <p class="text-gray-500">No hay detalles disponibles para esta venta.</p>
+    </ng-template>
+  
+    <button mat-button (click)="close()" class="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Cerrar</button>
+  </div>
+  

@@ -13,7 +13,9 @@ export interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7262/api'; // Reemplaza con la URL de tu backend
+  //private apiUrl = 'https://localhost:7262/api'; // Reemplaza con la URL de tu backend
+  private apiUrl = 'http://www.kiosco.somee.com/api';
+  
   private currentUser: any | null = null;
   
 

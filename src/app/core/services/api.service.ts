@@ -8,7 +8,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://localhost:7262';
+  //private apiUrl = 'https://localhost:7262';
+  private apiUrl = 'http://www.kiosco.somee.com';
 
   constructor(
     private http: HttpClient,

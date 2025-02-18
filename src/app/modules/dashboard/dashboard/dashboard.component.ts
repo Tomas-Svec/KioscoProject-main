@@ -1,6 +1,6 @@
 /* src/app/modules/dashboard/dashboard/dashboard.component.ts */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { ManageStockComponent } from "../../manage-stock/manage-stock/manage-stock.component";
@@ -13,6 +13,7 @@ import { ConfirmSaleModalComponent } from '../confirm-sale-modal/confirm-sale-mo
 import { ApiService } from '../../../core/services/api.service';
 import { CompleteSaleDto } from '../../../core/services/CompleteSaleDto';
 import { SaleDetailsModalComponent } from '../sale-details-modal/sale-details-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,21 +24,34 @@ import { SaleDetailsModalComponent } from '../sale-details-modal/sale-details-mo
     DiscountModalComponent,
     ConfirmSaleModalComponent,
     SaleDetailsModalComponent,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
+
+  searchUserName: string = ""; // Término de búsqueda para nombre de empleado
+  searchProductName: string = ""; // Término de búsqueda para nombre de producto
+  sortOrder: string = "asc"; // Dirección del ordenamiento
+  currentPage: number = 1;
+  pageSize: number = 5;
+  ventas: any[] = [];
+  totalVentas: number = 0;
+
+
+
   isDarkMode: boolean = false;
-  ventas: any[] = []; // Historial de ventas
   cartItems: any[] = []; // Productos en el carrito
   total: number = 0; // Total de la venta actual
   productos: any[] = []; // Productos en stock
   currentUser: any;
-  currentPage: number = 1;
-  pageSize: number = 5;
-  totalVentas: number = 0; // Esto se puede manejar desde el backend si lo soporta
+  totalRecords: number = 0; // Total de registros
+  selectedPaymentMethod: string = 'Efectivo'; // Valor predeterminado
+  allVentas: any[] = []; // Todas las ventas
+
+  
 
   constructor(
     private authService: AuthService,
@@ -45,7 +59,7 @@ export class DashboardComponent implements OnInit {
     private routeNavigator: RouteNavigatorService,
     private breakpointObserver: BreakpointObserver,
     private apiService: ApiService, // Agrega el servicio de API
-  private themeService: ThemeService // Agrega el servicio de tema
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -138,20 +152,45 @@ applyDiscountToProduct(product: any, discount: number | null): void {
 
 
    // Cargar historial de ventas
-   loadSalesHistory(): void {
-    this.apiService.getSales().subscribe(
-      (data: any[]) => {
-        this.ventas = data;
-      },
-      (error) => {
-        console.error("Error al cargar historial de ventas:", error);
-      }
-    );
+loadSalesHistory(): void {
+  this.apiService.getSales(
+    this.currentPage,
+    this.pageSize,
+    undefined, // minTotal
+    undefined, // maxTotal
+    "FechaVenta", // Columna a ordenar
+    this.sortOrder, // Aquí pasamos el orden asc/desc
+    undefined, // userId
+    this.searchUserName,
+    this.searchProductName
+  ).subscribe((response: any) => {
+    if (response) {
+      this.ventas = response.sales;
+      this.totalVentas = response.totalRecords;
+    }
+  });
+}
+
+  // Aplicar filtros
+  applyFilters(): void {
+    this.currentPage = 1; // Reiniciar a la primera página
+    this.loadSalesHistory();
   }
 
-  nextPage(): void {
-    this.currentPage++;
+  // Alternar el ordenamiento
+  toggleSortOrder(): void {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    console.log('Nuevo orden:', this.sortOrder);
     this.loadSalesHistory();
+  }
+  
+
+   // Navegación entre páginas
+   nextPage(): void {
+    if (this.currentPage < Math.ceil(this.totalVentas / this.pageSize)) {
+      this.currentPage++;
+      this.loadSalesHistory();
+    }
   }
 
   prevPage(): void {
@@ -161,6 +200,21 @@ applyDiscountToProduct(product: any, discount: number | null): void {
     }
   }
 
+  // Método para paginar las ventas
+  paginateSales(): void {
+  const start = (this.currentPage - 1) * this.pageSize;
+  const end = start + this.pageSize;
+  this.ventas = this.allVentas.slice(start, end);
+  }
+ 
+  // Total de páginas
+  get totalPages(): number {
+  return Math.ceil(this.totalVentas / this.pageSize);
+  }
+ 
+ 
+  
+
   //Abril modal de detalle de venta:
   openSaleDetails(sale: any): void {
     this.dialog.open(SaleDetailsModalComponent, {
@@ -169,7 +223,7 @@ applyDiscountToProduct(product: any, discount: number | null): void {
     });
   }
   
-  
+
 
   // Abrir modal de nueva venta
   openNewSaleModal(): void {
@@ -244,11 +298,12 @@ decrementQuantity(item: any): void {
     items: this.cartItems,
     total: this.total,
     user: this.currentUser,
-    date: new Date()
+    date: new Date(),
+    MedioPago: this.selectedPaymentMethod // Asegúrate de incluir el método de pago
   };
 
   const dialogRef = this.dialog.open(ConfirmSaleModalComponent, {
-    width: '800px',
+    width: '600px',
     data: saleData
   });
 

@@ -23,14 +23,17 @@
         </div>
 
            <!-- Descripción -->
-      <div>
-          <label for="descripcion" class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Descripción:</label>
-          <input [(ngModel)]="selectedProduct.descripcion" name="descripcion"
-                 class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
-                 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
-                 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
-                 bg-white dark:bg-gray-600 font-medium">
-        </div>
+           <div>
+            <label for="descripcion" class="block text-sm font-semibold  dark:text-gray-200 mb-2">Descripción:</label>
+            <input [(ngModel)]="selectedProduct.descripcion" name="descripcion" required
+                   class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg 
+                   focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400
+                   text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400 
+                   bg-white dark:bg-gray-600 font-medium">
+            <div *ngIf="form.controls['descripcion']?.invalid && form.submitted" class="text-red-500 text-sm">
+              La descripcion es obligatorio.
+            </div>
+          </div>
 
 
           <!-- Precio -->
@@ -252,12 +255,14 @@
       </form>
 
       <ul class="mt-6 space-y-2">
-        <li *ngFor="let categoria of categorias" class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-          <span class="text-sm text-gray-700">{{ categoria.nombre }}</span>
+        <li *ngFor="let filterCategories of filterCategories" class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
+          <span class="text-sm text-gray-700">{{ filterCategories.nombre }}</span>
           <div>
-            <button (click)="editCategory(categoria)"
-                    class="text-indigo-600 hover:text-indigo-900 mr-2">Editar</button>
-            <button (click)="deleteCategory(categoria.id)"
+            <button (click)="editCategory(filterCategories)"
+                    class="text-indigo-600 hover:text-indigo-900 mr-2">Editar</button>    
+            <button 
+            (click)="deleteCategory(filterCategories.id)"
+            [disabled]="filterCategories.id === 1"
                     class="text-red-600 hover:text-red-900">Eliminar</button>
           </div>
         </li>

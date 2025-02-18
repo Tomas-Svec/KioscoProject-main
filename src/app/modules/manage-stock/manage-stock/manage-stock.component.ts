@@ -18,6 +18,7 @@ export class ManageStockComponent implements OnInit {
 
   productos: any[] = [];
   categorias: any[] = [];
+  filterCategories: any[] = [];
   selectedProduct: any = {};
   proveedores: any[] = [];
   showCategoryModal = false; // Controla la visibilidad del modal de categorías
@@ -43,6 +44,7 @@ export class ManageStockComponent implements OnInit {
   ngOnInit(): void {
     this.loadProducts(); // Cargar productos
     this.loadCategories(); // Cargar categorías
+    this.loadFilteredCategories(); // Cargar categorías filtradas
   }
 
   // Método para cargar productos desde el backend
@@ -58,11 +60,26 @@ export class ManageStockComponent implements OnInit {
     );
   }
 
+  // Método para cargar categorías filtradas (excluyendo "Sin categoría")
+  loadFilteredCategories(): void {
+    this.apiService.getCategories().subscribe(
+      (data) => {
+        this.filterCategories = data.filter((categoria) => categoria.id !== 1); // Filtrar "Sin categoría"
+        this.cdr.detectChanges(); // Forzar detección de cambios
+        console.log('Categorías filtradas cargadas:', this.filterCategories);
+      },
+      (error) => {
+        console.error('Error al cargar categorías filtradas:', error);
+      }
+    );
+  }
+
   // Cargar categorías desde el backend
   loadCategories(): void {
     this.apiService.getCategories().subscribe(
       (data) => {
         this.categorias = data; // Almacena las categorías en el array
+        this.cdr.detectChanges(); // Forzar detección de cambios
         console.log('Categorías cargadas:', this.categorias);
       },
       (error) => {
@@ -70,6 +87,9 @@ export class ManageStockComponent implements OnInit {
       }
     );
   }
+
+
+  
 
   // Lógica para abrir y cerrar el modal general
   openModal() {
@@ -82,8 +102,10 @@ export class ManageStockComponent implements OnInit {
 
   // Abrir el modal de categorías
   openCategoryModal(): void {
-    this.showCategoryModal = true; // Muestra el modal de categorías
-    this.currentCategory = {}; // Limpiar la categoría actual
+    this.loadCategories(); // Recargar categorías antes de abrir el modal
+  this.loadFilteredCategories(); // Recargar categorías filtradas
+  this.showCategoryModal = true; // Mostrar el modal
+  this.currentCategory = {}; // Limpiar la categoría actual
   }
 
   // Cerrar el modal de categorías
@@ -92,30 +114,7 @@ export class ManageStockComponent implements OnInit {
     this.currentCategory = {}; // Limpiar los datos de la categoría
   }
 
-  // Guardar una nueva categoría o actualizar una existente
-  saveCategory(): void {
-    if (this.currentCategory.id) {
-      this.apiService.updateCategory(this.currentCategory.id, this.currentCategory).subscribe(
-        () => {
-          this.loadCategories(); // Recargar categorías
-          this.closeCategoryModal(); // Cerrar el modal
-        },
-        (error) => {
-          console.error('Error al actualizar categoría:', error);
-        }
-      );
-    } else {
-      this.apiService.createCategory(this.currentCategory).subscribe(
-        () => {
-          this.loadCategories(); // Recargar categorías
-          this.closeCategoryModal(); // Cerrar el modal
-        },
-        (error) => {
-          console.error('Error al crear categoría:', error);
-        }
-      );
-    }
-  }
+  
 
   // Después de cambiar selectedCategory
   onCategoryChange() {
@@ -126,6 +125,36 @@ export class ManageStockComponent implements OnInit {
   // Editar una categoría
   editCategory(category: any): void {
     this.currentCategory = { ...category }; // Copiar los datos de la categoría seleccionada
+  }
+
+  saveCategory(): void {
+    if (this.currentCategory.id) {
+      // Actualizar una categoría existente
+      this.apiService.updateCategory(this.currentCategory.id, this.currentCategory).subscribe(
+        () => {
+          this.loadCategories(); // Recargar categorías
+          this.closeCategoryModal(); // Cerrar el modal
+          console.log('Categoría actualizada correctamente.');
+        },
+        (error) => {
+          console.error('Error al actualizar categoría:', error);
+          alert('Hubo un error al actualizar la categoría.');
+        }
+      );
+    } else {
+      // Crear una nueva categoría
+      this.apiService.createCategory(this.currentCategory).subscribe(
+        () => {
+          this.loadCategories(); // Recargar categorías
+          this.closeCategoryModal(); // Cerrar el modal
+          console.log('Categoría creada correctamente.');
+        },
+        (error) => {
+          console.error('Error al crear categoría:', error);
+          alert('Hubo un error al crear la categoría.');
+        }
+      );
+    }
   }
 
   // Editar un producto
@@ -140,6 +169,7 @@ export class ManageStockComponent implements OnInit {
       this.apiService.deleteProduct(id).subscribe(
         () => {
           this.loadProducts(); // Recargar los productos
+          
         },
         (error) => {
           console.error('Error al eliminar producto:', error);
@@ -155,17 +185,29 @@ export class ManageStockComponent implements OnInit {
 
   // Eliminar una categoría
   deleteCategory(id: number): void {
+    const defaultCategoryId = 1;
+  
+    if (id === defaultCategoryId) {
+      alert('No se puede eliminar la categoría "Sin categoría".');
+      return;
+    }
+  
     if (confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
       this.apiService.deleteCategory(id).subscribe(
         () => {
-          this.loadCategories(); // Recargar categorías
+          // Recargar las categorías después de eliminar
+          this.loadCategories();
+          this.closeCategoryModal(); // Cerrar el modal
+          console.log('Categoría eliminada correctamente.');
         },
         (error) => {
           console.error('Error al eliminar categoría:', error);
+          alert('Hubo un error al eliminar la categoría.');
         }
       );
     }
   }
+  
 
   // Obtener el nombre de la categoría por ID
   getCategoriaNombre(id: number): string {
@@ -240,41 +282,55 @@ goToLastPage(): void {
   onSubmit(): void {
     // Validar que todos los campos requeridos estén completos
     if (!this.selectedProduct.nombre || !this.selectedProduct.precio || !this.selectedProduct.stock || !this.selectedProduct.categoriaId) {
-      alert('Por favor, completa todos los campos obligatorios.');
-      return;
+        alert('Por favor, completa todos los campos obligatorios.');
+        return;
     }
 
     // Validar que el precio sea mayor que 0
     if (this.selectedProduct.precio <= 0) {
-      alert('El precio debe ser mayor que 0.');
-      return;
+        alert('El precio debe ser mayor que 0.');
+        return;
     }
 
-    // Si el producto tiene un ID, actualízalo; de lo contrario, créalo
-    if (this.selectedProduct.id) {
-      this.apiService.updateProduct(this.selectedProduct.id, this.selectedProduct).subscribe(
-        () => {
-          alert('Producto actualizado correctamente.');
-          this.loadProducts();
-          this.selectedProduct = {};
-        },
-        (error) => {
-          console.error('Error al actualizar producto:', error);
-          alert('Hubo un error al actualizar el producto.');
-        }
-      );
-    } else {
-      this.apiService.createProduct(this.selectedProduct).subscribe(
-        () => {
-          alert('Producto creado correctamente.');
-          this.loadProducts();
-          this.selectedProduct = {};
-        },
-        (error) => {
-          console.error('Error al crear producto:', error);
-          alert('Hubo un error al crear el producto.');
-        }
-      );
+    // Verificar si ya existe un producto con los mismos datos
+    const existingProduct = this.productos.find((p) =>
+        p.nombre === this.selectedProduct.nombre &&
+        p.descripcion === this.selectedProduct.descripcion &&
+        p.precio === this.selectedProduct.precio &&
+        p.stock === this.selectedProduct.stock &&
+        p.categoriaId === this.selectedProduct.categoriaId
+    );
+
+    if (existingProduct) {
+        alert('Ya existe un producto con los mismos datos.');
+        return;
     }
-  }
+
+    // Crear o actualizar el producto
+    if (this.selectedProduct.id) {
+        this.apiService.updateProduct(this.selectedProduct.id, this.selectedProduct).subscribe(
+            () => {
+                alert('Producto actualizado correctamente.');
+                this.loadProducts();
+                this.selectedProduct = {};
+            },
+            (error) => {
+                console.error('Error al actualizar producto:', error);
+                alert('Hubo un error al actualizar el producto.');
+            }
+        );
+    } else {
+        this.apiService.createProduct(this.selectedProduct).subscribe(
+            () => {
+                alert('Producto creado correctamente.');
+                this.loadProducts();
+                this.selectedProduct = {};
+            },
+            (error) => {
+                console.error('Error al crear producto:', error);
+                alert('Hubo un error al crear el producto. Ya existe uno con el mismo nombre');
+            }
+        );
+    }
+}
 }

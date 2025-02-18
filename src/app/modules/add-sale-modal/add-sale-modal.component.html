@@ -61,33 +61,7 @@
       </button>
     </div>
 
-    <!-- Selección de Medio de Pago -->
-    <div class="mt-4">
-      <label for="paymentMethod" class="block text-gray-700 font-medium">Método de Pago</label>
-      <select 
-        id="paymentMethod" 
-        [(ngModel)]="saleForm.value.paymentMethod" 
-        class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800"
-        required
-      >
-        <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
-      </select>
-    </div>
+    
 
-    <!-- Botones de Confirmar o Cerrar -->
-    <div class="flex justify-between items-center mt-6">
-      <button 
-        class="btn btn-primary px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
-        (click)="submitSale()"
-      >
-        Confirmar Venta
-      </button>
-      <button 
-        class="btn btn-secondary px-4 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400"
-        (click)="dialogRef.close()"
-      >
-        Cerrar
-      </button>
-    </div>
   </div>
 </div>

@@ -67,12 +67,17 @@ export class ApiService {
     pageSize: number = 5,
     minTotal?: number,
     maxTotal?: number,
-    orderBy: string = "FechaVenta"
-  ): Observable<any[]> {
+    orderBy: string = "FechaVenta",
+    sortOrder: string = "asc", // Añadido el parámetro sortOrder
+    userId?: number,
+    userName?: string,
+    productName?: string
+  ): Observable<any> {
     let params = new HttpParams()
       .set("pageNumber", pageNumber.toString())
       .set("pageSize", pageSize.toString())
-      .set("orderBy", orderBy);
+      .set("orderBy", orderBy)
+      .set("sortOrder", sortOrder); // Usamos el argumento sortOrder aquí
   
     if (minTotal !== undefined) {
       params = params.set("minTotal", minTotal.toString());
@@ -82,21 +87,29 @@ export class ApiService {
       params = params.set("maxTotal", maxTotal.toString());
     }
   
-    return this.http.get<any[]>(`${this.apiUrl}/api/sales`, { params }).pipe(
-      tap(response => {
-        console.log("Ventas con detalles recibidas:", response); // 🔍 Verificar si llegan los detalles
-        if (response?.length > 0) {
-          response.forEach(sale => {
-            console.log("Detalles de la venta:", sale.Detalles);
-          });
-        }
-      }),
-      catchError(error => {
+    if (userId !== undefined) {
+      params = params.set("userId", userId.toString());
+    }
+  
+    if (userName) {
+      params = params.set("userName", userName);
+    }
+  
+    if (productName) {
+      params = params.set("productName", productName);
+    }
+  
+    // Imprime los parámetros para depuración
+    console.log('Parámetros enviados:', params);
+  
+    return this.http.get(`${this.apiUrl}/api/sales`, { params }).pipe(
+      catchError((error) => {
         console.error("Error al obtener ventas:", error);
-        return of([]); // Retornar un array vacío en caso de error
+        return of(null); // Retornar un valor nulo en caso de error
       })
     );
   }
+  
   
   submitSale(saleData: any): Observable<any> {
     return this.http.post(`/api/sales`, saleData);

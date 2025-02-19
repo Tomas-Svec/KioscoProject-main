@@ -14,19 +14,20 @@ import { ApiService } from '../../../core/services/api.service';
 import { CompleteSaleDto } from '../../../core/services/CompleteSaleDto';
 import { SaleDetailsModalComponent } from '../sale-details-modal/sale-details-modal.component';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from "../../../core/components/header/header.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-
     AddSaleModalComponent,
     DiscountModalComponent,
     ConfirmSaleModalComponent,
     SaleDetailsModalComponent,
     CommonModule,
-    FormsModule
-  ],
+    FormsModule,
+    HeaderComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

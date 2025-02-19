@@ -1,25 +1,27 @@
-<div class="flex flex-col h-screen bg-gray-100">
 
+
+<!-- Dashboard -->
+<div class="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
   <!-- Contenedor principal -->
-  <main class="flex-1 flex overflow-hidden p-6 space-x-6">
+  <main class="flex-1 flex flex-col md:flex-row overflow-hidden p-6 space-y-6 md:space-y-0 md:space-x-6">
     
     <!-- Sección Izquierda: Historial de Ventas -->
-    <section class="w-2/3 p-6 bg-white rounded-lg shadow-lg overflow-y-auto">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Ventas</h2>
+    <section class="w-full md:w-2/3 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-y-auto">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Historial de Ventas</h2>
 
       <!-- Filtros de búsqueda -->
-      <div class="flex space-x-4 mb-4">
+      <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mb-4">
         <input
           type="text"
           placeholder="Buscar por empleado..."
           [(ngModel)]="searchUserName"
-          class="w-1/2 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          class="w-full md:w-1/2 px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
         />
         <input
           type="text"
           placeholder="Buscar por producto..."
           [(ngModel)]="searchProductName"
-          class="w-1/2 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          class="w-full md:w-1/2 px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
         />
         <button 
           class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
@@ -31,28 +33,28 @@
       <!-- Tabla de ventas -->
       <div class="overflow-x-auto">
         <table class="w-full border-collapse shadow-md rounded-lg">
-          <thead class="bg-gray-200">
+          <thead class="bg-gray-200 dark:bg-gray-700">
             <tr>
-              <th class="px-4 py-2 text-left text-gray-600">ID</th>
-              <th class="px-4 py-2 text-left text-gray-600">Empleado</th>
-              <th class="px-4 py-2 text-left text-gray-600">
+              <th class="px-4 py-2 text-left text-gray-600 dark:text-gray-300">ID</th>
+              <th class="px-4 py-2 text-left text-gray-600 dark:text-gray-300">Empleado</th>
+              <th class="px-4 py-2 text-left text-gray-600 dark:text-gray-300">
                 Fecha
-                <button class="ml-2 text-blue-600 hover:underline" (click)="toggleSortOrder()">
+                <button class="ml-2 text-blue-600 dark:text-blue-400 hover:underline" (click)="toggleSortOrder()">
                   {{ sortOrder === 'asc' ? '⬆️' : '⬇️' }}
                 </button>
               </th>
-              <th class="px-4 py-2 text-left text-gray-600">Total</th>
-              <th class="px-4 py-2 text-left text-gray-600">Método de Pago</th>
-              <th class="px-4 py-2 text-left text-gray-600">Acciones</th>
+              <th class="px-4 py-2 text-left text-gray-600 dark:text-gray-300">Total</th>
+              <th class="px-4 py-2 text-left text-gray-600 dark:text-gray-300">Método de Pago</th>
+              <th class="px-4 py-2 text-left text-gray-600 dark:text-gray-300">Acciones</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let venta of ventas" class="hover:bg-gray-50">
-              <td class="px-4 py-2 text-gray-800">{{ venta.id }}</td>
-              <td class="px-4 py-2 text-gray-800">{{ venta.user?.nombre }} {{ venta.user?.apellido }}</td>
-              <td class="px-4 py-2 text-gray-800">{{ venta.fechaVenta | date: 'short' }}</td>
-              <td class="px-4 py-2 text-gray-800">${{ venta.total }}</td>
-              <td class="px-4 py-2 text-gray-800">{{ venta.medioPago }}</td>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tr *ngFor="let venta of ventas" class="hover:bg-gray-50 dark:hover:bg-gray-700">
+              <td class="px-4 py-2 text-gray-800 dark:text-gray-100">{{ venta.id }}</td>
+              <td class="px-4 py-2 text-gray-800 dark:text-gray-100">{{ venta.user?.nombre }} {{ venta.user?.apellido }}</td>
+              <td class="px-4 py-2 text-gray-800 dark:text-gray-100">{{ venta.fechaVenta | date: 'short' }}</td>
+              <td class="px-4 py-2 text-gray-800 dark:text-gray-100">${{ venta.total }}</td>
+              <td class="px-4 py-2 text-gray-800 dark:text-gray-100">{{ venta.medioPago }}</td>
               <td class="px-4 py-2">
                 <button 
                   class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
@@ -70,15 +72,15 @@
         <button
           (click)="prevPage()"
           [disabled]="currentPage === 1"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50"
+          class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 disabled:opacity-50"
         >
           Anterior
         </button>
-        <span class="text-gray-700">Página {{ currentPage }} de {{ totalPages }}</span>
+        <span class="text-gray-700 dark:text-gray-300">Página {{ currentPage }} de {{ totalPages }}</span>
         <button
           (click)="nextPage()"
           [disabled]="currentPage >= totalPages"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50"
+          class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 disabled:opacity-50"
         >
           Siguiente
         </button>
@@ -86,16 +88,16 @@
     </section>
 
     <!-- Sección Derecha: Carrito de Ventas -->
-    <aside class="w-1/3 p-6 bg-white rounded-lg shadow-lg overflow-y-auto">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Carrito de Ventas</h3>
+    <aside class="w-full md:w-1/3 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-y-auto">
+      <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Carrito de Ventas</h3>
 
       <!-- Botones de acción -->
-      <div class="flex space-x-2 mb-4">
-        <button class="w-1/2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+      <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+        <button class="w-full md:w-1/2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           (click)="openManageStockModal()">
           Administrar Stock
         </button>
-        <button class="w-1/2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        <button class="w-full md:w-1/2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           (click)="openNewSaleModal()">
           Nueva Venta
         </button>
@@ -103,13 +105,13 @@
 
       <!-- Lista de productos en el carrito -->
       <ul class="space-y-2">
-        <li *ngFor="let item of cartItems" class="flex justify-between items-center bg-gray-50 p-3 rounded-md shadow">
+        <li *ngFor="let item of cartItems" class="flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-3 rounded-md shadow">
           <div class="flex items-center space-x-3">
-            <span class="font-medium text-gray-800">{{ item.nombre }}</span>
+            <span class="font-medium text-gray-800 dark:text-gray-100">{{ item.nombre }}</span>
             <div class="flex items-center space-x-1">
               <button class="w-6 h-6 bg-red-500 text-white rounded hover:bg-red-600"
                 (click)="decrementQuantity(item)" [disabled]="item.cantidad <= 1">-</button>
-              <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded">{{ item.cantidad }}</span>
+              <span class="px-2 py-1 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded">{{ item.cantidad }}</span>
               <button class="w-6 h-6 bg-green-500 text-white rounded hover:bg-green-600"
                 (click)="incrementQuantity(item)">+</button>
             </div>
@@ -122,12 +124,12 @@
       </ul>
 
       <!-- Total de la venta -->
-      <div class="p-4 mt-4 bg-gray-50 rounded-md">
-        <strong class="block text-gray-800 text-lg">Total: ${{ total.toFixed(2) }}</strong>
+      <div class="p-4 mt-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+        <strong class="block text-gray-800 dark:text-gray-100 text-lg">Total: ${{ total.toFixed(2) }}</strong>
         <div class="mt-4">
-          <label for="paymentMethod" class="block text-gray-800 font-medium mb-2">Método de Pago:</label>
+          <label for="paymentMethod" class="block text-gray-800 dark:text-gray-100 font-medium mb-2">Método de Pago:</label>
           <select id="paymentMethod" [(ngModel)]="selectedPaymentMethod"
-            class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+            class="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-blue-500">
             <option value="Efectivo">Efectivo</option>
             <option value="Transferencia">Transferencia</option>
             <option value="Tarjeta">Tarjeta</option>
@@ -136,7 +138,7 @@
       </div>
 
       <!-- Botón de finalizar venta -->
-      <button class="w-full mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600"
+      <button class="w-full mt-4 px-4 py-2 bg-indigo-500 dark:bg-indigo-600 text-white rounded-md hover:bg-indigo-600 dark:hover:bg-indigo-700"
         (click)="openConfirmSaleModal()">
         Finalizar Venta
       </button>

@@ -14,7 +14,7 @@ export interface AuthResponse {
 })
 export class AuthService {
   //private apiUrl = 'https://localhost:7262/api'; // Reemplaza con la URL de tu backend
-  private apiUrl = 'https://kiosco.somee.com/api';
+  private apiUrl = 'https://www.kiosco.somee.com/api';
   
   private currentUser: any | null = null;
   
@@ -29,7 +29,7 @@ export class AuthService {
   // Método para iniciar sesión
   login(email: string, password: string): Observable<AuthResponse> {
     const loginData = { email, password };
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, loginData).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/Auth/login`, loginData).pipe(
       tap((response) => {
         this.saveUserData(response);
         this.getCurrentUser().subscribe((user) => {
@@ -43,7 +43,7 @@ export class AuthService {
    // Método para registrar un nuevo usuario
   register(nombre: string, apellido: string, email: string, password: string, rol: string): Observable<any> {
     const userData = { nombre, apellido, email, password, rol };
-    return this.http.post(`${this.apiUrl}/auth/register`, userData).pipe(
+    return this.http.post(`${this.apiUrl}/Auth/register`, userData).pipe(
       catchError(this.handleError)
     );
   }
@@ -81,7 +81,7 @@ isAuthenticated(): boolean {
   // Método para refrescar el token
   refreshToken(refreshToken: string): Observable<AuthResponse> {
     const refreshTokenData = { refreshToken };
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/refresh-token`, refreshTokenData).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/Auth/refresh-token`, refreshTokenData).pipe(
       tap((response) => {
         this.saveUserData(response);
       }),

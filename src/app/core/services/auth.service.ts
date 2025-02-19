@@ -14,7 +14,7 @@ export interface AuthResponse {
 })
 export class AuthService {
   //private apiUrl = 'https://localhost:7262/api'; // Reemplaza con la URL de tu backend
-  private apiUrl = 'https://www.kiosco.somee.com/api';
+  private apiUrl = 'https://kioscopop.somee.com/api';
   
   private currentUser: any | null = null;
   

@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 export class ApiService {
   //private apiUrl = 'https://localhost:7262';
-  private apiUrl = 'https://kioscopop.somee.com';
+  private apiUrl = 'https://ec2-18-206-250-108.compute-1.amazonaws.com';
 
   constructor(
     private http: HttpClient,

@@ -15,7 +15,7 @@ export interface AuthResponse {
 export class AuthService {
   //private apiUrl = 'https://localhost:7262/api'; // Reemplaza con la URL de tu backend
   //private apiUrl = 'https://ec2-18-206-250-108.compute-1.amazonaws.com/api';
-  private apiUrl = 'https://kiosco-vcwq.onrender.com/api';
+  private apiUrl = 'https://ec2-54-205-232-127.compute-1.amazonaws.com/api';
   
   private currentUser: any | null = null;
   

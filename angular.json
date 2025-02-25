@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/kiosco-frontend",
+            "outputPath": "dist/KioscoFrontend",
             "baseHref": "/KioscoProject-main/",
             "index": "src/index.html",
             "browser": "src/main.ts",

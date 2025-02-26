@@ -232,8 +232,8 @@ loadSalesHistory(): void {
     const dialogConfig = {
       width: isMobile ? '95%' : '80%',
       height: isMobile ? '95%' : '80%',
-      maxWidth: isMobile ? 'none' : '1200px',
-      maxHeight: isMobile ? 'none' : '90vh',
+      maxWidth: isMobile ? 'none' : '550px',
+      maxHeight: isMobile ? 'none' : '500px',
       panelClass: 'custom-dialog-container',
     };
   
@@ -245,6 +245,24 @@ loadSalesHistory(): void {
         this.onProductAdded(result); // Maneja el producto agregado
       }
     });
+  }
+
+  updateQuantity(item: any): void {
+    // Asegúrate de que la cantidad no sea menor que 1
+    if (item.cantidad < 1) {
+      item.cantidad = 1;
+    }
+  
+    // Verifica si la cantidad ingresada supera el stock disponible
+    if (item.cantidad > item.stock) {
+      alert(`No hay suficiente stock para este producto. Stock disponible: ${item.stock}`);
+      item.cantidad = item.stock; // Ajusta la cantidad al stock máximo disponible
+    }
+  
+    // Actualiza el total del carrito
+    this.calculateTotal();
+  
+    console.log('Cantidad actualizada:', item.cantidad);
   }
 
   
@@ -304,7 +322,7 @@ decrementQuantity(item: any): void {
   };
 
   const dialogRef = this.dialog.open(ConfirmSaleModalComponent, {
-    width: '600px',
+    width: '480px',
     data: saleData
   });
 

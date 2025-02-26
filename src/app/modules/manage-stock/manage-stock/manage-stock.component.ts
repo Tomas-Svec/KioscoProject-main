@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { RouteNavigatorService } from '../../../core/services/route-navigator.service';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-manage-stock',
@@ -13,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./manage-stock.component.css']
 })
 export class ManageStockComponent implements OnInit {
-  
+  @ViewChild('formularioEdicion') formularioEdicion!: ElementRef;
   @ViewChild('form') form!: NgForm; // Referencia fuerte al formulario
 
   productos: any[] = [];
@@ -38,7 +39,8 @@ export class ManageStockComponent implements OnInit {
     private apiService: ApiService,
     private routeNavigator: RouteNavigatorService,
     private location: Location,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialogRef: MatDialogRef<ManageStockComponent>
   ) {}
 
   ngOnInit(): void {
@@ -96,8 +98,10 @@ export class ManageStockComponent implements OnInit {
     this.showModal = true; // Abre el modal
   }
 
-  closeModal() {
-    this.showModal = false; // Cierra el modal
+
+  // Función para cerrar el modal
+  closeModal(): void {
+    this.dialogRef.close();
   }
 
   // Abrir el modal de categorías
@@ -161,6 +165,16 @@ export class ManageStockComponent implements OnInit {
   editProduct(product: any): void {
     this.selectedProduct = { ...product }; // Copiar los datos del producto seleccionado
     console.log('Producto seleccionado para edición:', this.selectedProduct);
+    
+    // Desplazar la pantalla hacia el formulario de edición
+    this.scrollToForm();
+  }
+
+  // Método para desplazar la pantalla al formulario de edición
+  scrollToForm(): void {
+    if (this.formularioEdicion && this.formularioEdicion.nativeElement) {
+      this.formularioEdicion.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   // Eliminar un producto

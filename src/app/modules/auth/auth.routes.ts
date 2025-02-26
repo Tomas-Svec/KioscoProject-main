@@ -1,4 +1,3 @@
-import { ManageStockComponent } from './../manage-stock/manage-stock/manage-stock.component';
 import { Routes } from '@angular/router';
 import { AuthGuard } from '../../core/guards/auth.guard';
 

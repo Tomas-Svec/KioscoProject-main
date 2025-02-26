@@ -3,12 +3,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { RouteNavigatorService } from '../../../core/services/route-navigator.service';
 import { CommonModule, NgIf } from '@angular/common'; // Importa CommonModule
 import { FormsModule } from '@angular/forms';
-
-// Importa los componentes app-header y app-button
-import { HeaderComponent } from '../../../core/components/header/header.component';
-import { ButtonComponent } from '../../../core/components/button/button.component';
-
-
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ThemeService } from '../../../core/services/theme.service';

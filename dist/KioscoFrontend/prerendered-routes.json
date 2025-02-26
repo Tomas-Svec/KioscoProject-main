@@ -1,0 +1,8 @@
+{
+  "routes": [
+    "/auth",
+    "/auth/login",
+    "/auth/register",
+    "/dashboard"
+  ]
+}

@@ -16,7 +16,6 @@
           "options": {
             "outputPath": "dist/KioscoFrontend",
             "baseHref":"/KioscoProject-main/",
-            
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [

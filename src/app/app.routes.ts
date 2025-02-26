@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-
+  
   {
     path: 'auth',
     children: [
@@ -31,7 +31,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard], // Protege esta ruta con el guard
   },
   {
-    path: '', // Cualquier otra ruta no definida
+    path: '**', // Cualquier otra ruta no definida
     redirectTo: '/auth/login', // Redirige al login
   },
 ];

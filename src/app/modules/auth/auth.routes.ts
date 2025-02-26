@@ -29,8 +29,5 @@ export const authRoutes: Routes = [
       },
     ],
   },
-  {
-    path: '**', // Cualquier otra ruta no definida
-    redirectTo: '/auth/login', // Redirige al login
-  },
+  
 ];

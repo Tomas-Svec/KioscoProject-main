@@ -21,7 +21,6 @@ import { ThemeService } from '../../../core/services/theme.service';
     NgIf,
     CommonModule,
     FormsModule, // Añade HeaderComponent aquí
-    ButtonComponent  // Añade ButtonComponent aquí
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],

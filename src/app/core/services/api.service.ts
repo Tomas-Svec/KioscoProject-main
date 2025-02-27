@@ -70,17 +70,18 @@ export class ApiService {
     minTotal?: number,
     maxTotal?: number,
     orderBy: string = "FechaVenta",
-    sortOrder: string = "asc", // Añadido el parámetro sortOrder
+    sortOrder: string = "asc", // Orden ascendente o descendente
     userId?: number,
     userName?: string,
-    productName?: string
+    searchTerm?: string // Nuevo parámetro para búsqueda combinada (producto y categoría)
   ): Observable<any> {
     let params = new HttpParams()
       .set("pageNumber", pageNumber.toString())
       .set("pageSize", pageSize.toString())
       .set("orderBy", orderBy)
-      .set("sortOrder", sortOrder); // Usamos el argumento sortOrder aquí
+      .set("sortOrder", sortOrder);
   
+    // Agregar parámetros opcionales
     if (minTotal !== undefined) {
       params = params.set("minTotal", minTotal.toString());
     }
@@ -97,17 +98,16 @@ export class ApiService {
       params = params.set("userName", userName);
     }
   
-    if (productName) {
-      params = params.set("productName", productName);
+    if (searchTerm) {
+      params = params.set("searchTerm", searchTerm); // Envía el término de búsqueda combinada
     }
   
-    // Imprime los parámetros para depuración
     console.log('Parámetros enviados:', params);
   
     return this.http.get(`${this.apiUrl}/api/sales`, { params }).pipe(
       catchError((error) => {
         console.error("Error al obtener ventas:", error);
-        return of(null); // Retornar un valor nulo en caso de error
+        return of(null);
       })
     );
   }

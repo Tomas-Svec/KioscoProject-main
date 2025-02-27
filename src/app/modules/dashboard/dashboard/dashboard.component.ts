@@ -35,13 +35,14 @@ export class DashboardComponent implements OnInit {
 
   searchUserName: string = ""; // Término de búsqueda para nombre de empleado
   searchProductName: string = ""; // Término de búsqueda para nombre de producto
+  searchCategory: string = ""; // Término de búsqueda para categoría
   sortOrder: string = "asc"; // Dirección del ordenamiento
   currentPage: number = 1;
   pageSize: number = 5;
   ventas: any[] = [];
   totalVentas: number = 0;
-
-
+  searchTerm: string = ""; // Término de búsqueda combinada (producto y categoría)
+  
 
   isDarkMode: boolean = false;
   cartItems: any[] = []; // Productos en el carrito
@@ -153,24 +154,25 @@ applyDiscountToProduct(product: any, discount: number | null): void {
 
 
    // Cargar historial de ventas
-loadSalesHistory(): void {
-  this.apiService.getSales(
-    this.currentPage,
-    this.pageSize,
-    undefined, // minTotal
-    undefined, // maxTotal
-    "FechaVenta", // Columna a ordenar
-    this.sortOrder, // Aquí pasamos el orden asc/desc
-    undefined, // userId
-    this.searchUserName,
-    this.searchProductName
-  ).subscribe((response: any) => {
-    if (response) {
-      this.ventas = response.sales;
-      this.totalVentas = response.totalRecords;
-    }
-  });
-}
+   loadSalesHistory(): void {
+    this.apiService.getSales(
+      this.currentPage, // number
+      this.pageSize, // number
+      undefined, // minTotal (number)
+      undefined, // maxTotal (number)
+      "FechaVenta", // orderBy (string)
+      this.sortOrder, // sortOrder (string)
+      undefined, // userId (number) - Aquí debes pasar un número o undefined
+      this.searchUserName, // userName (string)
+      this.searchTerm // searchTerm (string)
+    ).subscribe((response: any) => {
+      if (response) {
+        this.ventas = response.sales;
+        this.totalVentas = response.totalRecords;
+      }
+    });
+  }
+
 
   // Aplicar filtros
   applyFilters(): void {

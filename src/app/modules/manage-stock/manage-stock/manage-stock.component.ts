@@ -5,11 +5,12 @@ import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-manage-stock',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule],
   templateUrl: './manage-stock.component.html',
   styleUrls: ['./manage-stock.component.css']
 })
@@ -40,7 +41,8 @@ export class ManageStockComponent implements OnInit {
     private routeNavigator: RouteNavigatorService,
     private location: Location,
     private cdr: ChangeDetectorRef,
-    private dialogRef: MatDialogRef<ManageStockComponent>
+    private dialogRef: MatDialogRef<ManageStockComponent>,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -296,13 +298,13 @@ goToLastPage(): void {
   onSubmit(): void {
     // Validar que todos los campos requeridos estén completos
     if (!this.selectedProduct.nombre || !this.selectedProduct.precio || !this.selectedProduct.stock || !this.selectedProduct.categoriaId) {
-        alert('Por favor, completa todos los campos obligatorios.');
+        this.snackBar.open('Por favor, completa todos los campos obligatorios.', 'Cerrar', { duration: 3000 });
         return;
     }
 
     // Validar que el precio sea mayor que 0
     if (this.selectedProduct.precio <= 0) {
-        alert('El precio debe ser mayor que 0.');
+        this.snackBar.open('El precio debe ser mayor que 0.', 'Cerrar', { duration: 3000 });
         return;
     }
 
@@ -316,7 +318,7 @@ goToLastPage(): void {
     );
 
     if (existingProduct) {
-        alert('Ya existe un producto con los mismos datos.');
+        this.snackBar.open('Ya existe un producto con los mismos datos.', 'Cerrar', { duration: 3000 });
         return;
     }
 
@@ -324,27 +326,27 @@ goToLastPage(): void {
     if (this.selectedProduct.id) {
         this.apiService.updateProduct(this.selectedProduct.id, this.selectedProduct).subscribe(
             () => {
-                alert('Producto actualizado correctamente.');
+                this.snackBar.open('Producto actualizado correctamente.', 'Cerrar', { duration: 3000 });
                 this.loadProducts();
                 this.selectedProduct = {};
             },
             (error) => {
                 console.error('Error al actualizar producto:', error);
-                alert('Hubo un error al actualizar el producto.');
+                this.snackBar.open('Hubo un error al actualizar el producto.', 'Cerrar', { duration: 3000 });
             }
         );
     } else {
         this.apiService.createProduct(this.selectedProduct).subscribe(
             () => {
-                alert('Producto creado correctamente.');
+                this.snackBar.open('Producto creado correctamente.', 'Cerrar', { duration: 3000 });
                 this.loadProducts();
                 this.selectedProduct = {};
             },
             (error) => {
                 console.error('Error al crear producto:', error);
-                alert('Hubo un error al crear el producto. Ya existe uno con el mismo nombre');
+                this.snackBar.open('Hubo un error al crear el producto. Ya existe uno con el mismo nombre', 'Cerrar', { duration: 3000 });
             }
         );
     }
-}
+  }
 }

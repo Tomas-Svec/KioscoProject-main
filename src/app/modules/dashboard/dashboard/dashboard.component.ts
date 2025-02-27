@@ -15,6 +15,7 @@ import { CompleteSaleDto } from '../../../core/services/CompleteSaleDto';
 import { SaleDetailsModalComponent } from '../sale-details-modal/sale-details-modal.component';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from "../../../core/components/header/header.component";
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,8 @@ import { HeaderComponent } from "../../../core/components/header/header.componen
     SaleDetailsModalComponent,
     CommonModule,
     FormsModule,
-    HeaderComponent
+    HeaderComponent,
+    MatSnackBarModule
 ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -61,7 +63,8 @@ export class DashboardComponent implements OnInit {
     private routeNavigator: RouteNavigatorService,
     private breakpointObserver: BreakpointObserver,
     private apiService: ApiService, // Agrega el servicio de API
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -257,7 +260,10 @@ applyDiscountToProduct(product: any, discount: number | null): void {
   
     // Verifica si la cantidad ingresada supera el stock disponible
     if (item.cantidad > item.stock) {
-      alert(`No hay suficiente stock para este producto. Stock disponible: ${item.stock}`);
+      this.snackBar.open(`No hay suficiente stock para este producto. Stock disponible: ${item.stock}`, 'Cerrar', {
+        duration: 3000,
+        verticalPosition: 'bottom'
+      });
       item.cantidad = item.stock; // Ajusta la cantidad al stock máximo disponible
     }
   
@@ -267,6 +273,7 @@ applyDiscountToProduct(product: any, discount: number | null): void {
     console.log('Cantidad actualizada:', item.cantidad);
   }
 
+
   
 // Método para aumentar la cantidad de un producto con validación de stock
 incrementQuantity(item: any): void {
@@ -274,7 +281,11 @@ incrementQuantity(item: any): void {
     item.cantidad += 1; // Incrementa la cantidad si hay suficiente stock
     this.calculateTotal(); // Actualiza el total
   } else {
-    alert('No hay suficiente stock para este producto.');
+    this.snackBar.open('No hay suficiente stock para este producto.', 'Cerrar', {
+      duration: 3000,            // Duración en ms
+      verticalPosition: 'bottom',// Ubicación vertical
+      horizontalPosition: 'center' // Ubicación horizontal (opcional)
+    });
     console.log('No hay suficiente stock para:', item);
   }
 }

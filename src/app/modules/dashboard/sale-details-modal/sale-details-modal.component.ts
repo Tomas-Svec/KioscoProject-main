@@ -17,7 +17,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class SaleDetailsModalComponent {
   constructor(
     public dialogRef: MatDialogRef<SaleDetailsModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public sale: any
+    @Inject(MAT_DIALOG_DATA) public sale: any,
+    
   ) {
     console.log('Sale data received in modal:', this.sale);
     console.log('Sale details:', this.sale?.Detalles); 

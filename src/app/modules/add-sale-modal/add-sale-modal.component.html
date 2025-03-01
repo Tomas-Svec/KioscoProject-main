@@ -32,6 +32,7 @@
             <th class="p-2 text-left">Precio</th>
             <th class="p-2 text-left">Stock</th>
             <th class="p-2 text-left">Descripción</th>
+            <th class="p-2 text-left">Categorias</th>
             <th class="p-2 text-left">Acciones</th>
           </tr>
         </thead>
@@ -41,6 +42,7 @@
             <td class="p-2">${{ producto.precio }}</td>
             <td class="p-2">{{ producto.stock }}</td>
             <td class="p-2">{{ producto.descripcion }}</td>
+            <td class="p-2">{{ producto.category?.nombre || 'Sin categoría' }}</td>
             <td class="p-2">
               <button 
                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -62,6 +64,7 @@
           <p><span class="text-gray-600">Precio:</span> ${{ producto.precio }}</p>
           <p><span class="text-gray-600">Stock:</span> {{ producto.stock }}</p>
           <p><span class="text-gray-600">Descripción:</span> {{ producto.descripcion }}</p>
+          <p><span class="text-gray-600">Categoría:</span> {{ producto.category?.nombre || 'Sin categoría' }}</p>
         </div>
         <div class="mt-2">
           <button 

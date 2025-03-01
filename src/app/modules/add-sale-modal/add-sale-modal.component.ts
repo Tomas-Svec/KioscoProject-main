@@ -48,7 +48,7 @@ export class AddSaleModalComponent implements OnInit {
     this.apiService.getProducts().subscribe(
       (data: any[]) => {
         this.productos = data;  // Almacena los productos en el array
-        console.log('Productos cargados:', this.productos);  // Verifica que los datos estén llegando
+        console.log('Datos recibidos del backend:', data); // Inspeccionar la estructura de los datos
         this.filterProducts();  // Filtra los productos después de cargarlos
       },
       (error) => {

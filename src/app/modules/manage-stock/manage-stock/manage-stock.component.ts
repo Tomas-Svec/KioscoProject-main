@@ -297,7 +297,7 @@ goToLastPage(): void {
   // Enviar el formulario de producto
   onSubmit(): void {
     // Validar que todos los campos requeridos estén completos
-    if (!this.selectedProduct.nombre || !this.selectedProduct.precio || !this.selectedProduct.stock || !this.selectedProduct.categoriaId) {
+    if (!this.selectedProduct.nombre || !this.selectedProduct.precio || this.selectedProduct.stock == null || !this.selectedProduct.categoriaId){
         this.snackBar.open('Por favor, completa todos los campos obligatorios.', 'Cerrar', { duration: 3000 });
         return;
     }
